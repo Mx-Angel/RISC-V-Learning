@@ -1,0 +1,148 @@
+RISC-V Assembly Learning Plan (RV32I focus)
+1. Hello World (syscall basics)
+
+    Goal: Use ecall to write "Hello World" to stdout.
+
+    Skills:
+
+        Basic .data and .text sections
+
+        Loading addresses with la
+
+        Using a0, a1, a2 for syscall arguments
+
+        Setting a7 to syscall numbers
+
+    Why: Learn the bare minimum to talk to the OS.
+
+2. Print a Number
+
+    Goal: Store an integer in memory and print it to stdout.
+
+    Skills:
+
+        Memory storage (.word, .byte)
+
+        lw / li usage
+
+        Converting integers to strings (simple loop or fixed lookup table)
+
+    Why: First step toward working with non-string data.
+
+3. Read User Input
+
+    Goal: Prompt for a number or short string and echo it back.
+
+    Skills:
+
+        Syscall for read
+
+        Writing into a buffer
+
+        Understanding ASCII codes
+
+    Why: Introduces input handling.
+
+4. Simple Arithmetic Calculator
+
+    Goal: Read two integers, add them, print the result.
+
+    Skills:
+
+        add, sub, mul, div
+
+        Stack usage for temporary storage
+
+        More advanced branching
+
+    Why: Brings together input, math, and output.
+
+5. Conditional Logic
+
+    Goal: Check if a number is even or odd and print the result.
+
+    Skills:
+
+        andi, beq, bne
+
+        Signed vs unsigned comparisons (blt, bltu, etc.)
+
+    Why: Teaches control flow.
+
+6. Loops
+
+    Goal: Print numbers from 1 to N.
+
+    Skills:
+
+        Loop setup with addi and branches
+
+        Counters and comparisons
+
+    Why: Loops are essential for real programs.
+
+7. Array Operations
+
+    Goal: Store an array of numbers in memory, sum them, print the sum.
+
+    Skills:
+
+        Address arithmetic
+
+        lw with offsets
+
+        Keeping track of array length
+
+    Why: Teaches how to navigate data structures in memory.
+
+8. String Processing
+
+    Goal: Reverse a string entered by the user.
+
+    Skills:
+
+        Pointer manipulation
+
+        Loops with char buffers
+
+        lbu vs lb
+
+    Why: Practice with char arrays and byte operations.
+
+9. Multi-File Assembly
+
+    Goal: Have a main program call a function in another .S file.
+
+    Skills:
+
+        Using jal / jalr
+
+        Calling conventions (save/restore registers)
+
+        Linking multiple object files
+
+    Why: Gets you into reusable code and modular design.
+
+10. Mini Text-Based Game
+
+    Goal: A small “Guess the Number” game.
+
+    Skills:
+
+        Random number generation (you can fake it with a counter or syscall)
+
+        Input parsing
+
+        Loops and conditionals in a bigger program
+
+    Why: Brings together everything — IO, loops, branching, memory, and functions.
+
+How to Build This Up
+
+    Start with qemu-riscv32 + riscv64-unknown-elf-gcc/as/ld so you don’t need a full VM.
+
+    Keep each program in its own folder with .S source, a Makefile, and maybe a README for your notes.
+
+    Once you hit Project 6–7, start using gdb-multiarch with QEMU for debugging.
+
+    When you reach Project 9–10, try using C + Assembly mix to see how they interact.
