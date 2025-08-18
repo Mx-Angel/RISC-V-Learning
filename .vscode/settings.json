@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.s": "riscv",
+    "*.S": "riscv"
+  },
+  "debug.allowBreakpointsEverywhere": true
+}

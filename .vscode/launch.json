@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "riscv32: Attach to QEMU (gdbserver)",
+      "type": "cppdbg",
+      "request": "launch",
+      "MIMode": "gdb",
+      "miDebuggerPath": "riscv64-elf-gdb",
+      "miDebuggerServerAddress": "localhost:1234",
+      "program": "${workspaceFolder}/Addition/Addition.x",
+      "cwd": "${workspaceFolder}/Addition",
+      "stopAtEntry": true,
+      "externalConsole": false,
+      "launchCompleteCommand": "None",
+      "setupCommands": [
+        { "description": "Disable pagination", "text": "set pagination off" }
+      ]
+    }
+  ]
+}
