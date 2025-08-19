@@ -10,6 +10,9 @@ result: .space 10
 .section .text
     .globl _start
 _start:
+    # # Initialize global pointer for small data relocations relocated to gp
+    # la gp, __global_pointer$
+
     # write prompt
     li a0, 1              # stdout
     la a1, msg1
@@ -33,7 +36,7 @@ _start:
     ecall
 
     li a0, 0
-    la a1, buffer2        # Something is over-writting this address and I dont know what but I will figure it out
+    la a1, buffer2        # Need to global pointer 
     li a2, 2              # Make sure this is the same size as the buffer you are saving into
     li a7, 63
     ecall
@@ -41,26 +44,26 @@ _start:
     mv t1, a0             # save number of bytes read of second number
 
     # Convert from ASCII
-    # la t2, buffer1
-    # lb t4, 0(t2)          # Use t4 instead of t0
-    # addi t4, t4, -48
+    la t2, buffer1
+    lb t4, 0(t2)          # Use t4 instead of t0
+    addi t4, t4, -48
 
-    # la t3, buffer2  
-    # lb t5, 0(t3)          # Use t5 instead of t1
-    # addi t5, t5, -48
+    la t3, buffer2  
+    lb t5, 0(t3)          # Use t5 instead of t1
+    addi t5, t5, -48
 
-    # add t6, t4, t5        # Add the converted values
-    # addi t6, t6, 48       # Convert back to ASCII
+    add t6, t4, t5        # Add the converted values
+    addi t6, t6, 48       # Convert back to ASCII
 
-    # la t5, result
-    # sb t4, 0(t5)         # Store the result
-    # li t6, 10            # ASCII 10 = newline  
-    # sb t6, 1(t5)         # Store newline
+    la t5, result
+    sb t6, 0(t5)         # Store the result
+    li t6, 10            # ASCII 10 = newline  
+    sb t6, 1(t5)         # Store newline
 
     # write input back
     li a0, 1              # stdout
-    la a1, buffer2
-    mv a2, t1             # number of bytes read
+    la a1, result
+    li a2, 10              # number of bytes read
     li a7, 64             # write syscall
     ecall
 
