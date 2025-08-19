@@ -10,8 +10,8 @@ result: .space 10
 .section .text
     .globl _start
 _start:
-    # # Initialize global pointer for small data relocations relocated to gp
-    # la gp, __global_pointer$
+    # Initialize global pointer for small data relocations relocated to gp
+    la gp, __global_pointer$
 
     # write prompt
     li a0, 1              # stdout
