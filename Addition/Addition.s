@@ -3,15 +3,18 @@ msg1: .asciz "Hello, please type the first number you want to add:\n> "
 msg2: .asciz "Hello, please type the second number you want to add:\n> "
 
 .section .data
-buffer1: .space 10        # increase buffer to match read length
+buffer1: .space 10        # writeable buffers in .data for Linux user-mode
 buffer2: .space 10
 result: .space 10
 
 .section .text
     .globl _start
 _start:
-    # Initialize global pointer for small data relocations relocated to gp
-    la gp, __global_pointer$
+    # Initialize global pointer and turn of relaxation as no .sdata exists as we don't have a linker script/runtime that will initialise it properly
+    .option push        # Save current options (relaxation probably ON)
+    .option norelax     # Turn relaxation OFF for specifically the global pointer loading as it will still use relaxation regardless
+    la gp, __global_pointer$  # This la won't be relaxed/optimized
+    .option pop         # Restore previous options (relaxation back ON)
 
     # write prompt
     li a0, 1              # stdout
@@ -23,7 +26,7 @@ _start:
     # read input
     li a0, 0              # stdin
     la a1, buffer1
-    li a2, 2              # kept failing as leftover from print statement, switched .data to .rodata section and it worked?
+    li a2, 2              # kept failing as leftover from print statement, switched .data to .rodata section and it worked? Need to initialise gp
     li a7, 63             # read syscall
     ecall
 

@@ -7,6 +7,9 @@ OBJDUMP = riscv64-elf-objdump
 # Target architecture
 ARCH = -march=rv32i -mabi=ilp32
 
+# Relaxation toggle (RELAX=1 uses default relaxation; RELAX=0 disables it)
+RELAX ?= 0
+
 # File names
 ASM_FILE = Addition.s
 OBJ_FILE = Addition.o
@@ -17,15 +20,25 @@ all: $(EXECUTABLE)
 
 # Assemble the source file (include debug symbols for GDB/VS Code)
 $(OBJ_FILE): $(ASM_FILE)
+ifeq ($(RELAX),0)
+# Enable relaxation
+	$(AS) -g -mno-relax $(ARCH) -o $(OBJ_FILE) $(ASM_FILE)
+else
 	$(AS) -g $(ARCH) -o $(OBJ_FILE) $(ASM_FILE)
-# Add -mno-relax after (AS) so that the assembler does not perform relaxation on the instructions and avoids the wrong address being generated.
-# Only add -mno-relax if you dont want to initialise the global pointer (thought that is bad practice)
+endif
 
 # Link the object file to create executable
 $(EXECUTABLE): $(OBJ_FILE)
+ifeq ($(RELAX),0)
+	$(LD) -m elf32lriscv --no-relax -o $(EXECUTABLE) $(OBJ_FILE)
+else
 	$(LD) -m elf32lriscv -o $(EXECUTABLE) $(OBJ_FILE)
-# Add --no-relax after (LD) so that the linker does not perform relaxation on the instructions and avoids the wrong address being generated.
-# Only add --no-relax if you dont want to initialise the global pointer (thought that is bad practice)
+endif
+
+# Convenience target to rebuild without relaxation
+.PHONY: norelax
+norelax:
+	$(MAKE) RELAX=0 clean all
 
 # Clean up generated files
 clean:
